@@ -5,7 +5,9 @@ var gulp 				= require('gulp'),
 		uglify 			= require('gulp-uglifyjs'),
 		cssnano 		= require('gulp-cssnano'),
 		rename 			= require('gulp-rename'),
-		del 				= require('del');
+		del 				= require('del'),
+		imagemin 		= require('gulp-imagemin'),
+		pngquant 		= require('imagemin-pngquant');
 
 gulp.task('sass', function(){
 	return gulp.src('app/sass/**/*.sass')
@@ -43,13 +45,24 @@ gulp.task('clean', function(){
 	return del.sync('dist');
 });
 
+gulp.task('img', function(){
+	return gulp.src('app/img/**/*')
+	.pipe(imagemin({
+		interlaced: true,
+		progressive: true,
+		svgoPlugins: [{removeViewBox: false}],
+		une: [pngquant()]
+	}))
+	.pipe(gulp.dest('dist/img'));
+});
+
 gulp.task('watch', ['browser-sync', 'css-libs', 'scripts'], function(){
 	gulp.watch('app/sass/**/*.sass', ['sass']);
 	gulp.watch('app/*.html', browserSync.reload);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
 });
 
-gulp.task('bild', ['clean', 'sass', 'scripts'], function(){
+gulp.task('bild', ['clean', 'img', 'sass', 'scripts'], function(){
 	
 	var bildCss = gulp.src([
 		'app/css/main.css',
