@@ -2,4 +2,8 @@ body {
   font-size: 22px; }
 
 body {
-  background: pink; }
+  background: pink;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
